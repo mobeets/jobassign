@@ -1,3 +1,4 @@
+from datio import obj2json
 from spreadsheet import GoogleSpreadsheet
 
 KEYFILE = 'notes/keys.json'
@@ -12,41 +13,39 @@ def google_load(sheetname='fbjobapp'):
     Queues = sheets['Queues']
     # [{'queue': 'MEM', 'volume': '1000', 'minimum': '100', 'maximum': '500', 'utilization': '30'}, ...]
 
-    MACHINES = [user['name'] for (i, user) in enumerate(Users)]
-    TASKS = [task['name'] for (i, task) in enumerate(Queues)]
+    MACHINES = [i for (i, user) in enumerate(Users)]
+    TASKS = [i for (i, task) in enumerate(Queues)]
+
+    find_user = lambda name: next([x for x in Users if x['name'] == x])
+    find_task = lambda name: next([x for x in Queues if x['name'] == x])
+
+    # only add valid machine/task pairs
     MACHINES_TASKS = [(m, t) for m in MACHINES for t in TASKS]
+    INVALID_PAIRS = [(m, t) for m in MACHINES for t in TASKS if Users[m][Queues[t]['name'].lower()] != 'x']
     NUM_MACHINES = len(MACHINES)
     NUM_TASKS = len(TASKS)
 
     CAPACITIES = [8-float(user['ncw']) for user in Users]
 
     # n.b. only one task can be assigned per user
-    COSTS = [[1 for task in Queues] for user in Users]
+    BENEFITS = [[1 for task in Queues] for user in Users]
     EFFICIENCIES = [[1./float(task['utilization']) if user[task['name'].lower()] == 'x' else 0 for task in Queues] for user in Users]
-    MIN_VOL = [float(task['minimum']) if user[task['name'].lower()] == 'x' else 0 for task in Queues]
-    MAX_VOL = [float(task['maximum']) if user[task['name'].lower()] == 'x' else 0 for task in Queues]
-
-    # # min and max amounts per task
-    # amts = []
-    # for task in Queues:
-    #     vol = float(task['volume'])
-    #     mn = float(task['minimum'])
-    #     mx = float(task['maximum'])
-    #     utl = float(task['utilization'])
-    #     min_amt = mn/utl
-    #     max_amt = mx/utl
-    #     amts.append((min_amt, max_amt))
+    MIN_VOL = [float(task['minimum']) for task in Queues]
+    MAX_VOL = [float(task['maximum']) for task in Queues]
 
     return {'NUM_MACHINES': NUM_MACHINES,
         'NUM_TASKS': NUM_TASKS,
         'MACHINES': MACHINES,
         'TASKS': TASKS,
         'MACHINES_TASKS': MACHINES_TASKS,
-        'COSTS': COSTS,
+        'INVALID_PAIRS': INVALID_PAIRS,
+        'BENEFITS': BENEFITS,
         'EFFICIENCIES': EFFICIENCIES,
         'MIN_VOLUMES': MIN_VOL,
         'MAX_VOLUMES': MAX_VOL,
         'CAPACITIES': CAPACITIES}
 
 if __name__ == '__main__':
-    print google_load()
+    obj = google_load()
+    print obj
+    obj2json(obj, 'data/example_spdsht.json')

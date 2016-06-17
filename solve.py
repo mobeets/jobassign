@@ -52,15 +52,16 @@ def solve_pulp(obj):
             if v:
                 print "%d" %t,
 
-def solve_bnd(obj, create_dummy=True):
+def solve_bnd(obj, create_dummy=False):
     """
     can add dummy machine that adds large cost or something,
         to cover tasks that can't be worked
     """
 
-    COSTS = obj['COSTS']
+    BENEFITS = obj['BENEFITS']
     CAPACITIES = obj['CAPACITIES']
     MACHINES_TASKS = obj['MACHINES_TASKS']
+    INVALIDS = obj['INVALID_PAIRS']
     
     TASKS = obj['TASKS']
     MACHINES = obj['MACHINES']
@@ -69,13 +70,14 @@ def solve_bnd(obj, create_dummy=True):
     MIN_VOL = obj['MIN_VOLUMES']
 
     # create dummy object to catch extra tasks, at a large cost
-    if create_dummy:
-        MACHINES.append('Dummy')
+    # seems to be unnecessary
+    if create_dummy: # something wrong here
+        MACHINES.append(max(MACHINES)+1)
         EFFICIENCIES.append([1e-2]*len(EFFICIENCIES[-1]))
         CAPACITIES.append(1e8)
-        COSTS.append([10000]*len(COSTS[-1]))
+        BENEFITS.append([0]*len(BENEFITS[-1]))
         for t in TASKS:
-            MACHINES_TASKS.append(('Dummy', t))
+            MACHINES_TASKS.append((MACHINES[-1], t))
 
     assignVars = []
     for m in MACHINES:
@@ -85,10 +87,10 @@ def solve_bnd(obj, create_dummy=True):
             v.append(LpVariable("M{0}T{1}".format(m, t), 0, None, cat=LpContinuous))
         assignVars.append(v)
 
-    prob = LpProblem("GAP", LpMinimize)
+    prob = LpProblem("GAP", LpMaximize)
 
     # objective
-    prob += lpSum(assignVars[m][t] * COSTS[m][t] for m, t in MACHINES_TASKS), "min"
+    prob += lpSum(assignVars[m][t] * BENEFITS[m][t] for m, t in MACHINES_TASKS), "max"
 
     # machine capacity (knapsacks, relaxation)
     for m in MACHINES:
@@ -99,6 +101,10 @@ def solve_bnd(obj, create_dummy=True):
         prob += lpSum(assignVars[m][t] for m in MACHINES) <= MAX_VOL[t]
         prob += lpSum(assignVars[m][t] for m in MACHINES) >= MIN_VOL[t]
 
+    # ensure that invalid machine/tasks pairs have no work assigned
+    for (m,t) in INVALIDS:
+        prob += assignVars[m][t] == 0
+
     prob.solve()
 
     for m in MACHINES:
@@ -107,7 +113,7 @@ def solve_bnd(obj, create_dummy=True):
         for t in TASKS:
             v = assignVars[m][t].varValue
             if v:
-                print t
+                print t,v
 
 def main(infile):
     objs = jsonload(infile)
@@ -115,9 +121,9 @@ def main(infile):
     solve_pulp(objs)
 
 def main2(infile):
-    objs = google_load(infile)
+    objs = jsonload(infile)
     print objs
     solve_bnd(objs)
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    main2(sys.argv[1])

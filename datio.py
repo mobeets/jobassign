@@ -48,8 +48,7 @@ def jsonload(infile):
     with open(infile) as f:
         return json.loads(f.read())
 
-def txt2json(infile, outfile):
-    obj = txtload(infile)
+def obj2json(obj, outfile):
     jsonobj = json.dumps(obj, sort_keys=True,
         indent=4, separators=(',', ': '))
     with open(outfile, 'w') as f:
