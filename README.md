@@ -1,5 +1,9 @@
 
-Problem: Generalized Assignment Problem
+## Usage
+
+`python solve.py data/example.json`
+
+## Problem: Generalized Assignment Problem
 
 Inputs:
 * N bins with capacity C_1, ..., C_N
@@ -40,11 +44,6 @@ Also maybe add in a minimum-value slider for each volume.
 
 Resources:
 
-http://pythonhosted.org/PuLP/CaseStudies/a_blending_problem.html
-http://coral.ie.lehigh.edu/~ted/teaching/ie418/
-https://projects.coin-or.org/Dip
-
-## Install instructions
-
-https://projects.coin-or.org/Dip
-
+* http://pythonhosted.org/PuLP/CaseStudies/a_blending_problem.html
+* http://coral.ie.lehigh.edu/~ted/teaching/ie418/
+* https://projects.coin-or.org/Dip
