@@ -38,3 +38,13 @@ Solution #3: If optimization runs quickly enough, add sliders to each job type t
 Also maybe add in a minimum-value slider for each volume.
 
 
+Resources:
+
+http://pythonhosted.org/PuLP/CaseStudies/a_blending_problem.html
+http://coral.ie.lehigh.edu/~ted/teaching/ie418/
+https://projects.coin-or.org/Dip
+
+## Install instructions
+
+https://projects.coin-or.org/Dip
+
