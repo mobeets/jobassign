@@ -120,15 +120,17 @@ def solve_bnd(obj, create_dummy=False):
             if v:
                 print (t,v)
 
-def main(infile):
-    objs = jsonload(infile)
-    print objs
-    solve_pulp(objs)
+    return obj, assignVars
 
-def main2(infile):
+# def main(infile):
+#     objs = jsonload(infile)
+#     print objs
+#     solve_pulp(objs)
+
+def main(infile):
     objs = jsonload(infile)
     print objs
     solve_bnd(objs)
 
 if __name__ == '__main__':
-    main2(sys.argv[1])
+    main(sys.argv[1])

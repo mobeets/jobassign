@@ -1,7 +1,8 @@
 from datio import obj2json
 from spreadsheet import GoogleSpreadsheet
 
-KEYFILE = 'notes/keys.json'
+# KEYFILE = 'notes/keys.json'
+KEYFILE = None
 def get_spreadsheet(name, keyfile=KEYFILE):
     gs = GoogleSpreadsheet(keyfile)
     return gs.fetchWorksheets(name)
@@ -48,7 +49,9 @@ def google_load(sheetname='fbjobapp'):
         'MIN_VOLUMES': MIN_VOL,
         'MAX_VOLUMES': MAX_VOL,
         'MAX_PER_MACHINE': MAX_PER_MACHINE,
-        'CAPACITIES': CAPACITIES}
+        'CAPACITIES': CAPACITIES,
+        'Users': Users,
+        'Queues': Queues}
 
 if __name__ == '__main__':
     obj = google_load()

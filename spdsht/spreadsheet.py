@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 import httplib2
@@ -7,19 +8,30 @@ from gdata.spreadsheets.client import SpreadsheetsClient
 from oauth2client.client import SignedJwtAssertionCredentials
 
 class TokenFromOAuth2Creds:
-  def __init__(self, creds):
-    self.creds = creds
-  def modify_request(self, req):
-    if self.creds.access_token_expired or not self.creds.access_token:
-      self.creds.refresh(httplib2.Http())
-    self.creds.apply(req.headers)
+    def __init__(self, creds):
+        self.creds = creds
+
+    def modify_request(self, req):
+        if self.creds.access_token_expired or not self.creds.access_token:
+            self.creds.refresh(httplib2.Http())
+        self.creds.apply(req.headers)
+
+def get_keys():
+    return os.getenv('GDATA_CLIENT_EMAIL'), os.getenv('GDATA_PRIVATE_KEY')
 
 class GoogleSpreadsheet:
     # see http://gspread.readthedocs.org/en/latest/oauth2.html for instructions on creating google_access_key.json
-    def __init__(self, infile='google_access_key.json'):
-        json_key = json.load(open(infile))
+    def __init__(self, infile=None):#'google_access_key.json'):
+        if infile is not None:
+            json_key = json.load(open(infile))
+            client_email = json_key['client_email']
+            private_key = json_key['private_key']
+        else:
+            client_email, private_key = get_keys()
+            private_key = private_key.replace('\\n', '\n')
+
         scope = ['https://spreadsheets.google.com/feeds']
-        credentials = SignedJwtAssertionCredentials(json_key['client_email'], json_key['private_key'], scope)
+        credentials = SignedJwtAssertionCredentials(client_email, private_key, scope)
         self.gd_client = SpreadsheetsClient()
         self.gd_client.auth_token = TokenFromOAuth2Creds(credentials)
 
