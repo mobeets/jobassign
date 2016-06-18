@@ -98,7 +98,7 @@ def solve_bnd(obj, create_dummy=False):
 
     # don't assign machine too much of one task
     for t in TASKS:
-        for m in TASKS:
+        for m in MACHINES:
             prob += assignVars[m][t] <= MAX_PER_MACHINE[t]
 
     # assignment
