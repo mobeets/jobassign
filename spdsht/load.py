@@ -28,10 +28,14 @@ def google_load(sheetname='fbjobapp'):
     CAPACITIES = [8-float(user['ncw']) for user in Users]
 
     # n.b. only one task can be assigned per user
-    BENEFITS = [[1 for task in Queues] for user in Users]
+    RANK = [float(task['priority']) for task in Queues]
+    BENEFITS = [max(RANK)-x+1 for x in RANK] # reverse
+
     EFFICIENCIES = [[1./float(task['utilization']) if user[task['name'].lower()] == 'x' else 0 for task in Queues] for user in Users]
-    MIN_VOL = [float(task['minimum']) for task in Queues]
-    MAX_VOL = [float(task['maximum']) for task in Queues]
+    MIN_VOL = [float(task['minvolume']) for task in Queues]
+    MAX_VOL = [float(task['maxvolume']) for task in Queues]
+
+    MAX_PER_MACHINE = [float(task['maxassign']) for task in Queues]
 
     return {'NUM_MACHINES': NUM_MACHINES,
         'NUM_TASKS': NUM_TASKS,
@@ -43,6 +47,7 @@ def google_load(sheetname='fbjobapp'):
         'EFFICIENCIES': EFFICIENCIES,
         'MIN_VOLUMES': MIN_VOL,
         'MAX_VOLUMES': MAX_VOL,
+        'MAX_PER_MACHINE': MAX_PER_MACHINE,
         'CAPACITIES': CAPACITIES}
 
 if __name__ == '__main__':

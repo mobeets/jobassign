@@ -45,6 +45,23 @@ class GoogleSpreadsheet:
         print "Loaded %s table records from Google Docs" % (recordIndex)
         return results
 
+    def write(self, sid, wid, rows, key_match=None, val_match=None, \
+        key=None, val=None):
+        # create new row
+        if key is None and val is None:
+            entry = gdata.spreadsheets.data.ListEntry()
+            for key, val in row.iteritems():
+                entry.set_value(key, str(val))
+            self.gd_client.add_list_entry(entry, sid, wid)
+
+        # update existing row
+        if key is not None:
+            rows = self.gd_client.GetListFeed(sid, wid).entry
+            for row in rows:
+                if row.get_value(key_match) == val_match:
+                    row.set_value(key, str(val))
+            self.gd_client.update(entry)
+
 if __name__ == "__main__":
     # usage: python test.py "spreadsheet name"
     gs = GoogleSpreadsheet()

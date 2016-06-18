@@ -68,6 +68,7 @@ def solve_bnd(obj, create_dummy=False):
     EFFICIENCIES = obj['EFFICIENCIES'] # 1/UTILIZATION
     MAX_VOL = obj['MAX_VOLUMES']
     MIN_VOL = obj['MIN_VOLUMES']
+    MAX_PER_MACHINE = obj['MAX_PER_MACHINE']
 
     # create dummy object to catch extra tasks, at a large cost
     # seems to be unnecessary
@@ -75,7 +76,6 @@ def solve_bnd(obj, create_dummy=False):
         MACHINES.append(max(MACHINES)+1)
         EFFICIENCIES.append([1e-2]*len(EFFICIENCIES[-1]))
         CAPACITIES.append(1e8)
-        BENEFITS.append([0]*len(BENEFITS[-1]))
         for t in TASKS:
             MACHINES_TASKS.append((MACHINES[-1], t))
 
@@ -90,11 +90,16 @@ def solve_bnd(obj, create_dummy=False):
     prob = LpProblem("GAP", LpMaximize)
 
     # objective
-    prob += lpSum(assignVars[m][t] * BENEFITS[m][t] for m, t in MACHINES_TASKS), "max"
+    prob += lpSum(assignVars[m][t] * BENEFITS[t] for m, t in MACHINES_TASKS), "max"
 
     # machine capacity (knapsacks, relaxation)
     for m in MACHINES:
         prob += lpSum(assignVars[m][t] * EFFICIENCIES[m][t] for t in TASKS) <= CAPACITIES[m]
+
+    # don't assign machine too much of one task
+    for t in TASKS:
+        for m in TASKS:
+            prob += assignVars[m][t] <= MAX_PER_MACHINE[t]
 
     # assignment
     for t in TASKS:
@@ -113,7 +118,7 @@ def solve_bnd(obj, create_dummy=False):
         for t in TASKS:
             v = assignVars[m][t].varValue
             if v:
-                print t,v
+                print (t,v)
 
 def main(infile):
     objs = jsonload(infile)
