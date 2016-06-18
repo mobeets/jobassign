@@ -1,3 +1,4 @@
 PuLP==1.6.1
 gdata==2.0.18
 CherryPy==3.2.4
+httplib2==0.9.1
