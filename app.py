@@ -27,6 +27,17 @@ class Root(object):
         # return json.dumps(obj, sort_keys=True,
         #     indent=4, separators=(',', ': '))
 
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_in()
+    def validate(self):
+        result = {"operation": "request", "result": "success"}
+
+        content = cherrypy.request.json
+        assigns = content["assigns"]
+
+        return result
+
 def main():
     cherrypy.config.update(conf.settings)
 
