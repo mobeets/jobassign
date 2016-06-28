@@ -1,6 +1,6 @@
 import os
 CURDIR = os.path.dirname(os.path.abspath(__file__))
-ROOTDIR = os.path.abspath(os.path.join(CURDIR, '..'))
+ROOTDIR = CURDIR
 
 settings = {
     'global': {
@@ -13,5 +13,17 @@ settings = {
 root_settings = {
     '/': {
         'tools.staticdir.root': ROOTDIR,
-    }
+    },
+    '/favicon.ico': {
+        'tools.staticfile.on': True,
+        'tools.staticfile.filename': os.path.join(ROOTDIR, 'static', 'favicon.ico')
+    },
+    '/static': {
+        'tools.staticdir.on': True,
+        'tools.staticdir.dir': 'static'
+    },
+    '/data': {
+        'tools.staticdir.on': True,
+        'tools.staticdir.dir': 'data'
+    },
 }

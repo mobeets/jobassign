@@ -32,11 +32,25 @@ class Root(object):
     @cherrypy.tools.json_in()
     def validate(self):
         result = {"operation": "request", "result": "success"}
-
         content = cherrypy.request.json
         assigns = content["assigns"]
-
+        result["is_valid"] = True
         return result
+
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_in()
+    def optimize(self):
+        result = {"operation": "request", "result": "success"}
+        content = cherrypy.request.json
+        assigns = content["assigns"]
+        result["is_success"] = True
+        return result
+
+    @cherrypy.expose
+    def demo(self):
+        with open('demo.html') as f:
+            return f.read()
 
 def main():
     cherrypy.config.update(conf.settings)

@@ -1,0 +1,18 @@
+{
+	"metadata": [
+		{"name": "name", "label": "Name", "datatype": "string", "editable": false},
+		{"name": "working", "label": "Working?", "datatype": "string", "editable": true, "values": {"yes": "X", "no": "-"}},
+		{"name": "RING", "label": "RING", "datatype": "string", "editable": true, "values": {"yes": "X", "no": "-"}},
+		{"name": "WALK", "label": "WALK", "datatype": "string", "editable": true, "values": {"yes": "X", "no": "-"}},
+		{"name": "SING", "label": "SING", "datatype": "string", "editable": true, "values": {"yes": "X", "no": "-"}},
+		{"name": "SLEEP", "label": "SLEEP", "datatype": "string", "editable": true, "values": {"yes": "X", "no": "-"}},
+	],
+
+	"data":[
+		{"id": 1, "values": {"name": "Frodo", "working": "yes", "RING": "yes", "WALK": "no", "SING": "no", "SLEEP": "yes"}},
+		{"id": 2, "values": {"name": "Sam", "working": "yes",  "RING": "yes", "WALK": "no", "SING": "no", "SLEEP": "yes"}},
+		{"id": 3, "values": {"name": "Gollum", "working": "yes",  "RING": "yes", "WALK": "no", "SING": "no", "SLEEP": "yes"}},
+		{"id": 4, "values": {"name": "Gandalf", "working": "yes",  "RING": "yes", "WALK": "no", "SING": "no", "SLEEP": "yes"}},
+		{"id": 5, "values": {"name": "Sauron", "working": "no",  "RING": "yes", "WALK": "no", "SING": "no", "SLEEP": "yes"}},
+	]
+}
