@@ -120,6 +120,7 @@ def solve_bnd(obj, create_dummy=False):
             if v:
                 print (t,v)
 
+    assignVars = [[v.varValue for v in vs] for vs in assignVars]
     return obj, assignVars
 
 # def main(infile):

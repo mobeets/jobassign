@@ -3,15 +3,16 @@
 		{"name": "name", "label": "Name", "datatype": "string", "editable": false},
 		{"name": "volume", "label": "Volume", "datatype": "integer", "editable": true},
 		{"name": "priority", "label": "Priority", "datatype": "integer", "editable": true},
+		{"name": "utilization", "label": "Utilization", "datatype": "integer", "editable": true},
 		{"name": "min_volume", "label": "Min Volume", "datatype": "integer", "editable": true},
 		{"name": "max_volume", "label": "Max Volume", "datatype": "integer", "editable": true},
 		{"name": "max_assign", "label": "Max Assign", "datatype": "integer", "editable": true},
 	],
 
 	"data":[
-		{"id": 1, "values": {"name": "RING", "priority": 1, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 5}},
-		{"id": 2, "values": {"name": "WALK", "priority": 1, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 15}},
-		{"id": 3, "values": {"name": "SING", "priority": 1, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 25}},
-		{"id": 4, "values": {"name": "SLEEP", "priority": 1, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 9}},
+		{"id": 1, "values": {"name": "RING", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 5}},
+		{"id": 2, "values": {"name": "WALK", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 15}},
+		{"id": 3, "values": {"name": "SING", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 25}},
+		{"id": 4, "values": {"name": "SLEEP", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 9}},
 	]
 }

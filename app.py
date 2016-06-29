@@ -3,7 +3,7 @@ import os.path
 import cherrypy
 
 import conf
-from spdsht.load import google_load
+from spdsht.load import google_load, jsgrid_load
 from solve import solve_bnd
 
 class Root(object):
@@ -12,6 +12,11 @@ class Root(object):
 
     @cherrypy.expose
     def index(self):
+        with open('demo.html') as f:
+            return f.read()
+
+    @cherrypy.expose
+    def google_test(self):
         obj = google_load()
         obj, assignVars = solve_bnd(obj)
 
@@ -20,7 +25,7 @@ class Root(object):
             out += '<br>' 
             out += "User {0} assigned tasks:<br>".format(obj['Users'][m]['name'])
             for t in obj['TASKS']:
-                v = assignVars[m][t].varValue
+                v = assignVars[m][t]#.varValue
                 if v:
                     out += '({0}, {1})<br>'.format(obj['Queues'][t]['name'], v)
         return out
@@ -35,6 +40,9 @@ class Root(object):
         content = cherrypy.request.json
         assigns = content["assigns"]
         result["is_valid"] = True
+        # self.convert(content["assigns"])
+        # self.convert(content["jobs"])
+        # self.convert(content["users"])
         return result
 
     @cherrypy.expose
@@ -43,14 +51,17 @@ class Root(object):
     def optimize(self):
         result = {"operation": "request", "result": "success"}
         content = cherrypy.request.json
-        assigns = content["assigns"]
-        result["is_success"] = True
-        return result
+        with open('tmp.txt', 'w') as f:
+            f.write(json.dumps(content))
 
-    @cherrypy.expose
-    def demo(self):
-        with open('demo.html') as f:
-            return f.read()
+        obj = jsgrid_load(content["users"], content["jobs"])
+        obj, assignVars = solve_bnd(obj)
+
+        result["is_success"] = True
+        result["obj"] = obj
+        result["assignVars"] = assignVars
+        print assignVars
+        return result
 
 def main():
     cherrypy.config.update(conf.settings)

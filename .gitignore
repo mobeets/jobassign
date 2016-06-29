@@ -3,3 +3,5 @@
 *.pyc
 _old/
 notes/
+.ipynb_checkpoints/
+*.ipynb
