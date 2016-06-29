@@ -3,8 +3,8 @@ import os.path
 import cherrypy
 
 import conf
-from spdsht.load import google_load, jsgrid_load
-from solve import solve_bnd
+from model.gglio import google_solve
+from model.appio import jsgrid_solve, jsgrid_validate
 
 class Root(object):
     def __init__(self):
@@ -12,25 +12,12 @@ class Root(object):
 
     @cherrypy.expose
     def index(self):
-        with open('demo.html') as f:
+        with open('static/demo.html') as f:
             return f.read()
 
     @cherrypy.expose
     def google_test(self):
-        obj = google_load()
-        obj, assignVars = solve_bnd(obj)
-
-        out = ''
-        for m in obj['MACHINES']:
-            out += '<br>' 
-            out += "User {0} assigned tasks:<br>".format(obj['Users'][m]['name'])
-            for t in obj['TASKS']:
-                v = assignVars[m][t]#.varValue
-                if v:
-                    out += '({0}, {1})<br>'.format(obj['Queues'][t]['name'], v)
-        return out
-        # return json.dumps(obj, sort_keys=True,
-        #     indent=4, separators=(',', ': '))
+        return google_solve()
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -38,11 +25,7 @@ class Root(object):
     def validate(self):
         result = {"operation": "request", "result": "success"}
         content = cherrypy.request.json
-        assigns = content["assigns"]
-        result["is_valid"] = True
-        # self.convert(content["assigns"])
-        # self.convert(content["jobs"])
-        # self.convert(content["users"])
+        result["is_valid"], result["comments"] = jsgrid_validate(content)
         return result
 
     @cherrypy.expose
@@ -51,16 +34,8 @@ class Root(object):
     def optimize(self):
         result = {"operation": "request", "result": "success"}
         content = cherrypy.request.json
-        with open('tmp.txt', 'w') as f:
-            f.write(json.dumps(content))
-
-        obj = jsgrid_load(content["users"], content["jobs"])
-        obj, assignVars = solve_bnd(obj)
-
-        result["is_success"] = True
-        result["obj"] = obj
-        result["assignVars"] = assignVars
-        print assignVars
+        result["is_success"], result["assigns"], result["comments"] = \
+            jsgrid_solve(content)
         return result
 
 def main():

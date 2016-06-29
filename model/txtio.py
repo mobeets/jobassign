@@ -1,5 +1,3 @@
-import sys
-import json
 
 def txtload(infile):
     """
@@ -43,16 +41,3 @@ def txtload(infile):
         'COSTS': COSTS,
         'RESOURCE_USE': RESOURCE_USE,
         'CAPACITIES': CAPACITIES}
-
-def jsonload(infile):
-    with open(infile) as f:
-        return json.loads(f.read())
-
-def obj2json(obj, outfile):
-    jsonobj = json.dumps(obj, sort_keys=True,
-        indent=4, separators=(',', ': '))
-    with open(outfile, 'w') as f:
-        f.write(jsonobj)
-    
-if __name__ == '__main__':
-    print jsonload(sys.argv[1])

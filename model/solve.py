@@ -6,8 +6,7 @@ This is the simpler, pulp-only solution
 
 import sys
 from pulp import *
-from datio import jsonload
-from spdsht.load import google_load
+from model.datio import jsonload
 
 def solve_pulp(obj):
     """
@@ -122,11 +121,6 @@ def solve_bnd(obj, create_dummy=False):
 
     assignVars = [[v.varValue for v in vs] for vs in assignVars]
     return obj, assignVars
-
-# def main(infile):
-#     objs = jsonload(infile)
-#     print objs
-#     solve_pulp(objs)
 
 def main(infile):
     objs = jsonload(infile)
