@@ -34,8 +34,8 @@ class Root(object):
     def optimize(self):
         result = {"operation": "request", "result": "success"}
         content = cherrypy.request.json
-        result["is_success"], result["assigns"], result["comments"] = \
-            jsgrid_solve(content)
+        result["is_success"], result["assigns"], result["full_assigns"], \
+            result["comments"] = jsgrid_solve(content)
         return result
 
 def main():

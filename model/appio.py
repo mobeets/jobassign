@@ -37,14 +37,31 @@ def jsgrid_load(users, jobs):
     jobs = [job_convert(job) for job in jobs]
     return model.datio.loadobj(users, jobs)
 
+def assign_convert(obj, assignVars):
+    """
+    assigns = [{u'SING': 0, u'RING': 3, u'SLEEP': 9, u'name': u'Frodo', u'WALK': 5}, ...]
+    """
+    users = [item['name'] for item in obj['Users']]
+    jobs = [item['name'] for item in obj['Queues']]
+    assigns = []
+    simple_assigns = []
+    for i, row in enumerate(assignVars):
+        assign = {}
+        assign['name'] = users[i]
+        for j, val in enumerate(row):
+            assign[jobs[j]] = val
+        assigns.append(assign)
+        simple_assigns.append([users[i]] + row)
+    return assigns, simple_assigns
+
 def jsgrid_solve(content):
     is_success = True
     obj = jsgrid_load(content["users"], content["jobs"])
     obj, assignVars = solve_bnd(obj)
 
-    assigns = []
+    full_assigns, assigns = assign_convert(obj, assignVars)
     comments = []
-    return is_success, assigns, comments
+    return is_success, assigns, full_assigns, comments
 
 def jsgrid_validate(content):
     is_valid = True

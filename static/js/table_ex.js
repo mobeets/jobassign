@@ -14,7 +14,16 @@ function load_tables() {
 
 }
 
-function sendGrid(urlName) {
+function exportGrid(curGrid) {
+    // console.log(curGrid);
+    var obj = [];
+    for (i = 0; i < curGrid.getRowCount(); i++) { 
+        obj.push(curGrid.getRowValues(i));
+    }
+    return obj;
+}
+
+function sendGrid(urlName, successFcn) {
     curGrid = editableGrid1;
     obj1 = exportGrid(editableGrid1);
     obj2 = exportGrid(editableGrid2);
@@ -33,24 +42,35 @@ function sendGrid(urlName) {
         },
         success: function(data) {
             console.log(data);
+            successFcn(data);
         }
     });
 }
 
+function updateAssigns(data) {
+    // assigns = [{u'SING': 0, u'RING': 3, u'SLEEP': 9, u'name': u'Frodo', u'WALK': 5}, ...]
+    assigns = data["assigns"];
+    rows = [];
+    for (i = 0; i < assigns.length; i++) {
+        rows.push({"id": i+1, "values": assigns[i]});
+    }
+    sheet = {"data": rows};
+    // console.log("Updating...");
+    // console.log(sheet);
+    editableGrid1.update(sheet);
+    // console.log("Updated. Maybe.");
+}
+
+function handleValidation(data) {
+    console.log("I feel so validated.");
+}
+
 function doValidate() {
-    sendGrid("/validate");
+    sendGrid("/validate", handleValidation);
 }
 
 function doOptimize() {
-    sendGrid("/optimize");
-}
-
-function exportGrid(curGrid) {
-    var obj = [];
-    for (i = 0; i < curGrid.getRowCount(); i++) { 
-        obj.push(curGrid.getRowValues(i));
-    }
-    return obj;
+    sendGrid("/optimize", updateAssigns);
 }
 
 $( document ).ready(function() {
