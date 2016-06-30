@@ -1,7 +1,6 @@
 {
 	"metadata": [
 		{"name": "name", "label": "Name", "datatype": "string", "editable": false},
-		{"name": "volume", "label": "Volume", "datatype": "integer", "editable": true},
 		{"name": "priority", "label": "Priority", "datatype": "integer", "editable": true},
 		{"name": "utilization", "label": "Utilization", "datatype": "integer", "editable": true},
 		{"name": "min_volume", "label": "Min Volume", "datatype": "integer", "editable": true},
@@ -10,9 +9,8 @@
 	],
 
 	"data":[
-		{"id": 1, "values": {"name": "RING", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 5}},
-		{"id": 2, "values": {"name": "WALK", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 15}},
-		{"id": 3, "values": {"name": "SING", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 25}},
-		{"id": 4, "values": {"name": "SLEEP", "priority": 1, "utilization": 2, "min_volume": 5, "max_volume": 20, "max_assign": 5, "volume": 9}},
+		{"id": 1, "values": {"name": "RING", "priority": 1, "utilization": 250, "min_volume": 1000, "max_volume": 5000, "max_assign": 500}},
+		{"id": 2, "values": {"name": "WALK", "priority": 2, "utilization": 30, "min_volume": 100, "max_volume": 1000, "max_assign": 60}},
+		{"id": 3, "values": {"name": "SING", "priority": 3, "utilization": 70, "min_volume": 60, "max_volume": 60, "max_assign": 140}},
 	]
 }
